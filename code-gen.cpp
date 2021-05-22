@@ -63,15 +63,20 @@ int tCG::p11(){ // E -> CPROC
 }
 
 int tCG::p12(){ // EASYLET -> HEASYL E )
-    // TODO: 1
+    if(S1->count != 0){
+        S1->obj +=S2->obj + ";\n\t";
+    }
+    S1->obj +=S2->obj;
+    ++(S1->count);
+    return 0;
 }
 
 int tCG::p13(){ // HEASYL -> ( let ( )
-    // TODO: 2
+    return 0;
 }
 
 int tCG::p14(){ // HEASYL -> HEASYL INTER
-    S1->obj += S2->obj + ",\n\t ";
+    S1->obj += S2->obj + "\n\t, ";
     return 0;
 }
 
@@ -167,7 +172,8 @@ int tCG::p29(){ // STR -> SCOND
 }
 
 int tCG::p30(){ // SCOND -> ( cond SBRANCHES )
-    // TODO: 3
+    S1->obj = "(" + S3->obj + ")";
+    return 0;
 }
 
 int tCG::p31(){ // SBRANCHES -> SELSE
@@ -175,7 +181,8 @@ int tCG::p31(){ // SBRANCHES -> SELSE
 }
 
 int tCG::p32(){ // SBRANCHES -> SCLAUS SBRANCHES
-    // TODO: 4
+    S1->obj += S2->obj;
+    return 0;
 }
 
 int tCG::p33(){ // SCLAUS -> ( BOOL STR )
@@ -184,8 +191,7 @@ int tCG::p33(){ // SCLAUS -> ( BOOL STR )
 }
 
 int tCG::p34(){ // SELSE -> ( else STR )
-    // S1->obj = "( : " + S3->obj + ")";
-    // TODO: 5
+    S1->obj += "(" + S3->obj + ")";
 	return 0;
 }
 
