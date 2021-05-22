@@ -6,48 +6,48 @@
 #include <string>
 #include "fsm.h"
 
-class tBaseLexer{
- std::ifstream fsource;//поток
-//               ввода из файла
- int         line;//счетчик строк
- char        buf[1000];//буфер строки
- static const size_t bufsize=1000;
- char*       start;//указатель начала
-//                   лексемы в буфере
- char*       end;//указатель конца
-//                 лексемы в буфере
- std::string lexeme;//лексема
+class tBaseLexer {
+    std::ifstream fsource; // РїРѕС‚РѕРє РІРІРѕРґР° РёР· С„Р°Р№Р»Р°
+    int line; // СЃС‡РµС‚С‡РёРє СЃС‚СЂРѕРє
+    char buf[1000]; // Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё
+    static const size_t bufsize = 1000;
+    char *start; // СѓРєР°Р·Р°С‚РµР»СЊ РЅР°С‡Р°Р»Р° Р»РµРєСЃРµРјС‹ РІ Р±СѓС„РµСЂРµ
+    char *end; // СѓРєР°Р·Р°С‚РµР»СЊ РєРѕРЅС†Р° Р»РµРєСЃРµРјС‹ РІ Р±СѓС„РµСЂРµ
+    std::string lexeme; // Р»РµРєСЃРµРјР°
 
 public:
-//конструктор
- tBaseLexer();
-//деструктор
- ~tBaseLexer() {}
-//функции-члены
- bool Begin(const char* filename);//под-
-//            готовка к работе с файлом
- void End(){fsource.close();}//завершение
-//                        работы с файлом
+    // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    tBaseLexer();
 
- std::string GetToken();//извлекает из
-//                 текста очередной токен
- std::string GetLexeme()const{return lexeme;}
- int GetLineCount()const{return line;}
- int GetStartPos()const{return start-buf;}
- int GetEndPos()const{return end-buf;}
- std::string GetLineText()const{
-                     return std::string(buf);}
+    // РґРµСЃС‚СЂСѓРєС‚РѕСЂ
+    ~tBaseLexer() {}
+
+    // С„СѓРЅРєС†РёРё-С‡Р»РµРЅС‹
+    bool Begin(const char *filename); // РїРѕРґРіРѕС‚РѕРІРєР° Рє СЂР°Р±РѕС‚Рµ СЃ С„Р°Р№Р»РѕРј
+    void End() { fsource.close(); } // Р·Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹ СЃ С„Р°Р№Р»РѕРј
+
+    std::string GetToken(); // РёР·РІР»РµРєР°РµС‚ РёР· С‚РµРєСЃС‚Р° РѕС‡РµСЂРµРґРЅРѕР№ С‚РѕРєРµРЅ
+    std::string GetLexeme() const { return lexeme; }
+
+    int GetLineCount() const { return line; }
+
+    int GetStartPos() const { return start - buf; }
+
+    int GetEndPos() const { return end - buf; }
+
+    std::string GetLineText() const {
+        return std::string(buf);
+    }
 
 protected:
-//автоматы
-  tFSM Aint;//целое
-  tFSM Adec; //вещественное
-  tFSM Aid;  //идентификатор
-  tFSM Aidq; //идентификатор предиката
+    //Р°РІС‚РѕРјР°С‚С‹
+    tFSM Aint; // С†РµР»РѕРµ
+    tFSM Adec; // РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ
+    tFSM Aid;  // РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+    tFSM Aidq; // РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРµРґРёРєР°С‚Р°
 private:
-  tFSM Aoper;//оператор
-  tFSM Abool;//булевская константа
-  tFSM Astr; //строка
+    tFSM Aoper; // РѕРїРµСЂР°С‚РѕСЂ
+    tFSM Abool; // Р±СѓР»РµРІСЃРєР°СЏ РєРѕРЅСЃС‚Р°РЅС‚Р°
+    tFSM Astr; // СЃС‚СЂРѕРєР°
 };
 #endif
-
