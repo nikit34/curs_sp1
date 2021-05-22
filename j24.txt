@@ -1,11 +1,11 @@
 # $j24
-      $id      $idq      $dec      $int 
-    $bool      $str         (         ) 
-        +         -         *         / 
-        <         =         >        <= 
-       >=       and       not        or 
-     cond      else        if       let 
-   define   display   newline      set! 
+      $id      $idq      $dec      $int
+    $bool      $str         (         )
+        +         -         *         /
+        <         =         >        <=
+       >=       and       not        or
+     cond      else        if       let
+   define   display   newline      set!
 
 #
         S -> PROG #1
@@ -96,4 +96,3 @@ SBRANCHES -> SELSE #31 |
     BLVAR -> ( let ( LOCDEF #86 |
              BLVAR LOCDEF #87
    LOCDEF -> ( $id E ) #88
-

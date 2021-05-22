@@ -1,9 +1,9 @@
 ;zeller.ss
 (define (day-of-week)
  (zeller dd
-      (if(< mm 3)(+ mm 10)(- mm 2))
-      (remainder (if(< mm 3)(- yyyy 1)yyyy)100)
-      (quotient (if(< mm 3)(- yyyy 1)yyyy)100)
+      (cond((> 3 mm)(+ mm 10))(#t (- mm 2)))
+      (remainder (cond((> 3 mm)(- yyyy 1))(#t yyyy))100)
+      (quotient (cond((> 3 mm)(- yyyy 1))(#t yyyy))100)
  )
 )
 (define (zeller d m y c)
@@ -17,7 +17,7 @@
  )
 )
 (define (neg-to-pos d)
- (cond((< d 0)(+ d 7))
+ (cond((> 0 d)(+ d 7))
       (#t d)
  )
 )

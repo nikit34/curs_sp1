@@ -54,33 +54,28 @@ int tCG::p09(){ // E -> COND
 	return 0;
 }
 
-int tCG::p10(){ // E -> CPROC
+int tCG::p10(){ // E -> EASYLET
 	return 0;
 }
 
-int tCG::p11(){ // CPROC -> HCPROC )
-    S1->obj += ")";
-    if (S1->count >= 2) {
-        S1->obj += "\n\t ";
-    }
+int tCG::p11(){ // E -> CPROC
 	return 0;
 }
 
-int tCG::p12(){ // HCPROC -> ( $id
-    S1->obj = decor(S2->name) + "(";
-	return 0;
+int tCG::p12(){ // EASYLET -> HEASYL E )
+    // TODO: 1
 }
 
-int tCG::p13(){ // HCPROC -> HCPROC E
-    if (S1->count) {
-        S1->obj += "\n\t , ";
-    }
-    S1->obj += S2->obj;
-    ++S1->count;
-	return 0;
+int tCG::p13(){ // HEASYL -> ( let ( )
+    // TODO: 2
 }
 
-int tCG::p14(){ // AREX -> HAREX E )
+int tCG::p14(){ // HEASYL -> HEASYL INTER
+    S1->obj += S2->obj + ",\n\t ";
+    return 0;
+}
+
+int tCG::p15(){ // AREX -> HAREX E )
     if (S1->name == "/" && S1->count == 0) {
         S1->obj = "(1. " + S1->obj + " " + S2->obj + ")";
     }
@@ -90,13 +85,13 @@ int tCG::p14(){ // AREX -> HAREX E )
 	return 0;
 }
 
-int tCG::p15(){ // HAREX -> ( AROP
+int tCG::p16(){ // HAREX -> ( AROP
     S1->obj = S2->obj;
     S1->name = S2->name;
 	return 0;
 }
 
-int tCG::p16(){ // HAREX -> HAREX E
+int tCG::p17(){ // HAREX -> HAREX E
     if (S1->count == 0)
         S1->obj = S2->obj + " " + S1->name;
     else
@@ -105,96 +100,27 @@ int tCG::p16(){ // HAREX -> HAREX E
 	return 0;
 }
 
-int tCG::p17(){ // AROP -> +
+int tCG::p18(){ // AROP -> +
     S1->obj = S1->name;
 	return 0;
 }
 
-int tCG::p18(){ // AROP -> -
+int tCG::p19(){ // AROP -> -
     S1->obj = S1->name;
 	return 0;
 }
 
-int tCG::p19(){ // AROP -> *
+int tCG::p20(){ // AROP -> *
     S1->obj = S1->name;
 	return 0;
 }
 
-int tCG::p20(){ // AROP -> /
+int tCG::p21(){ // AROP -> /
     S1->obj = S1->name;
 	return 0;
 }
 
-int tCG::p21(){ // COND -> ( cond BRANCHES )
-    S1->obj = "(" + S3->obj + "_infinity)";
-	return 0;
-}
-
-int tCG::p22(){ // BRANCHES -> CLAUS
-	return 0;
-}
-
-int tCG::p23(){ // BRANCHES -> CLAUS BRANCHES
-    S1->obj += S2->obj;
-	return 0;
-}
-
-int tCG::p24(){ // CLAUS -> ( BOOL CLAUSB )
-    S1->obj += S2->obj + "\n\t? " + S3->obj + "\n\t: ";
-	return 0;
-}
-
-int tCG::p25(){ // CLAUSB -> E
-	return 0;
-}
-
-int tCG::p26(){ // CLAUSB -> INTER CLAUSB
-    S1->obj += ",\n\t " + S2->obj;
-    ++S1->count;
-    return 0;
-}
-
-int tCG::p27(){ // STR -> $str
-    S1->obj = S1->name;
-	return 0;
-}
-
-int tCG::p28(){ // STR -> SIF
-	return 0;
-}
-
-int tCG::p29(){ // SIF -> ( if BOOL STR STR )
-    S1->obj = "(" + S3->obj + "\n\t? " + S4->obj + "\n\t: " + S5->obj + ")";
-	return 0;
-}
-
-int tCG::p30(){ // BOOL -> $bool
-    S1->obj = (S1->name == "#t" ? "true" : "false");
-	return 0;
-}
-
-int tCG::p31(){ // BOOL -> $idq
-    S1->obj = decor(S1->name);
-	return 0;
-}
-
-int tCG::p32(){ // BOOL -> REL
-	return 0;
-}
-
-int tCG::p33(){ // BOOL -> OR
-	return 0;
-}
-
-int tCG::p34(){ // BOOL -> AND
-	return 0;
-}
-
-int tCG::p35(){ // BOOL -> CPRED
-	return 0;
-}
-
-int tCG::p36(){ // CPRED -> HCPRED )
+int tCG::p22(){ // CPROC -> HCPROC )
     S1->obj += ")";
     if (S1->count >= 2) {
         S1->obj += "\n\t ";
@@ -202,12 +128,103 @@ int tCG::p36(){ // CPRED -> HCPRED )
 	return 0;
 }
 
-int tCG::p37(){ // HCPRED -> ( $idq
+int tCG::p23(){ // HCPROC -> ( $id
     S1->obj = decor(S2->name) + "(";
 	return 0;
 }
 
-int tCG::p38(){ // HCPRED -> HCPRED ARG
+int tCG::p24(){ // HCPROC -> HCPROC E
+    if (S1->count) {
+        S1->obj += "\n\t , ";
+    }
+    S1->obj += S2->obj;
+    ++S1->count;
+	return 0;
+}
+
+int tCG::p25(){ // COND -> ( cond BRANCHES )
+    S1->obj = "(" + S3->obj + "_infinity)";
+	return 0;
+}
+
+int tCG::p26(){ // BRANCHES -> CLAUS CLAUS
+    S1->obj += S2->obj;
+	return 0;
+}
+
+int tCG::p27(){ // CLAUS -> ( BOOL E )
+    S1->obj += S2->obj + "\n\t? " + S3->obj + "\n\t: ";
+	return 0;
+}
+
+int tCG::p28(){ // STR -> $str
+    S1->obj = S1->name;
+	return 0;
+}
+
+int tCG::p29(){ // STR -> SCOND
+	return 0;
+}
+
+int tCG::p30(){ // SCOND -> ( cond SBRANCHES )
+    // TODO: 3
+}
+
+int tCG::p31(){ // SBRANCHES -> SELSE
+    return 0;
+}
+
+int tCG::p32(){ // SBRANCHES -> SCLAUS SBRANCHES
+    // TODO: 4
+}
+
+int tCG::p33(){ // SCLAUS -> ( BOOL STR )
+    S1->obj += S2->obj + "\n\t? " + S3->obj + "\n\t: ";
+	return 0;
+}
+
+int tCG::p34(){ // SELSE -> ( else STR )
+    // S1->obj = "( : " + S3->obj + ")";
+    // TODO: 5
+	return 0;
+}
+
+int tCG::p35(){ // BOOL -> $bool
+    S1->obj = (S1->name == "#t" ? "true" : "false");
+	return 0;
+}
+
+int tCG::p36(){ // BOOL -> $idq
+    S1->obj = decor(S1->name);
+	return 0;
+}
+
+int tCG::p37(){ // BOOL -> REL
+	return 0;
+}
+
+int tCG::p38(){ // BOOL -> AND
+	return 0;
+}
+
+int tCG::p39(){ // BOOL -> CPRED
+	return 0;
+}
+
+int tCG::p40(){ // CPRED -> HCPRED )
+    S1->obj += ")";
+    if (S1->count >= 2) {
+        S1->obj += "\n\t ";
+    }
+	return 0;
+}
+
+int tCG::p41(){ // HCPRED -> ( $idq
+    S1->obj = decor(S2->name) + "(";
+	return 0;
+}
+
+int tCG::p42(){ // HCPRED -> HCPRED ARG
     if (S1->count) {
         S1->obj += S1->count % 2 ? ", " : "\n\t , ";
     }
@@ -216,163 +233,149 @@ int tCG::p38(){ // HCPRED -> HCPRED ARG
 	return 0;
 }
 
-int tCG::p39(){ // ARG -> E
+int tCG::p43(){ // ARG -> E
 	return 0;
 }
 
-int tCG::p40(){ // ARG -> BOOL
+int tCG::p44(){ // ARG -> BOOL
 	return 0;
 }
 
-int tCG::p41(){ // REL -> ( = E E )
+int tCG::p45(){ // REL -> ( = E E )
     S1->obj = "(" + S3->obj + " == " + S4->obj + ")";
 	return 0;
 }
 
-int tCG::p42(){ // REL -> ( < E E )
-    S1->obj = "(" + S3->obj + " < " + S4->obj + ")";
+int tCG::p46(){ // REL -> ( > E E )
+    S1->obj = "(" + S3->obj + " > " + S4->obj + ")";
 	return 0;
 }
 
-int tCG::p43(){ // OR -> HOR BOOL )
+int tCG::p47(){ // AND -> HAND BOOL )
     S1->obj = "(" + S1->obj + S2->obj + ")";
 	return 0;
 }
 
-int tCG::p44(){ // HOR -> ( or
+int tCG::p48(){ // HAND -> ( and
 	return 0;
 }
 
-int tCG::p45(){ // HOR -> HOR BOOL
-    S1->obj += S2->obj + " || ";
-	return 0;
-}
-
-int tCG::p46(){ // AND -> HAND BOOL )
-    S1->obj = "(" + S1->obj + S2->obj + ")";
-	return 0;
-}
-
-int tCG::p47(){ // HAND -> ( and
-	return 0;
-}
-
-int tCG::p48(){ // HAND -> HAND BOOL
+int tCG::p49(){ // HAND -> HAND BOOL
     S1->obj += S2->obj + " && ";
 	return 0;
 }
 
-int tCG::p49(){ // SET -> HSET E )
+int tCG::p50(){ // SET -> HSET E )
     S1->obj += S2->obj;
 	return 0;
 }
 
-int tCG::p50(){ // HSET -> ( set! $id
+int tCG::p51(){ // HSET -> ( set! $id
     S1->obj = decor(S3->name) + " = ";
 	return 0;
 }
 
-int tCG::p51(){ // DISPSET -> ( display E )
+int tCG::p52(){ // DISPSET -> ( display E )
     S1->obj = "display(" + S3->obj + ")";
 	return 0;
 }
 
-int tCG::p52(){ // DISPSET -> ( display BOOL )
+int tCG::p53(){ // DISPSET -> ( display BOOL )
     S1->obj = "display(" + S3->obj + ")";
 	return 0;
 }
 
-int tCG::p53(){ // DISPSET -> ( display STR )
+int tCG::p54(){ // DISPSET -> ( display STR )
     S1->obj = "display(" + S3->obj + ")";
 	return 0;
 }
 
-int tCG::p54(){ // DISPSET -> ( newline )
+int tCG::p55(){ // DISPSET -> ( newline )
     S1->obj = "newline()";
 	return 0;
 }
 
-int tCG::p55(){ // DISPSET -> SET
+int tCG::p56(){ // DISPSET -> SET
 	return 0;
 }
 
-int tCG::p56(){ // INTER -> DISPSET
+int tCG::p57(){ // INTER -> DISPSET
 	return 0;
 }
 
-int tCG::p57(){ // INTER -> E
+int tCG::p58(){ // INTER -> E
 	return 0;
 }
 
-int tCG::p58(){ // CALCS -> CALC
+int tCG::p59(){ // CALCS -> CALC
 	return 0;
 }
 
-int tCG::p59(){ // CALCS -> CALCS CALC
+int tCG::p60(){ // CALCS -> CALCS CALC
     S1->obj += S2->obj;
 	return 0;
 }
 
-int tCG::p60(){ // CALC -> E
+int tCG::p61(){ // CALC -> E
     S1->obj = "display(" + S1->obj + ");\n\t newline();\n\t ";
 	return 0;
 }
 
-int tCG::p61(){ // CALC -> BOOL
+int tCG::p62(){ // CALC -> BOOL
     S1->obj = "display(" + S1->obj + ");\n\t newline();\n\t ";
 	return 0;
 }
 
-int tCG::p62(){ // CALC -> STR
+int tCG::p63(){ // CALC -> STR
     S1->obj = "display(" + S1->obj + ");\n\t newline();\n\t ";
 	return 0;
 }
 
-int tCG::p63(){ // CALC -> DISPSET
+int tCG::p64(){ // CALC -> DISPSET
     S1->obj += ";\n\t ";
 	return 0;
 }
 
-int tCG::p64(){ // DEFS -> DEF
+int tCG::p65(){ // DEFS -> DEF
 	return 0;
 }
 
-int tCG::p65(){ // DEFS -> DEFS DEF
+int tCG::p66(){ // DEFS -> DEFS DEF
     S1->obj += S2->obj;
 	return 0;
 }
 
-int tCG::p66(){ // DEF -> PRED
+int tCG::p67(){ // DEF -> PRED
 	return 0;
 }
 
-int tCG::p67(){ // DEF -> VAR
+int tCG::p68(){ // DEF -> VAR
 	return 0;
 }
 
-int tCG::p68(){ // DEF -> PROC
+int tCG::p69(){ // DEF -> PROC
 	return 0;
 }
 
-int tCG::p69(){ // PRED -> HPRED BOOL )
+int tCG::p70(){ // PRED -> HPRED BOOL )
     S1->obj += "return\n " + S2->obj + ";\n\t }\n";
 	return 0;
 }
 
-int tCG::p70(){ // HPRED -> PDPAR )
+int tCG::p71(){ // HPRED -> PDPAR )
     S1->obj += ")";
     declarations += S1->obj + ";\n\t ";
     S1->obj += "{\n ";
 	return 0;
 }
 
-int tCG::p71(){ // PDPAR -> ( define ( $idq
+int tCG::p72(){ // PDPAR -> ( define ( $idq
     S1->obj = "bool " + decor(S4->name) + "/*" + S4->line + "*/ (";
     S1->count = 0;
 	return 0;
 }
 
-int tCG::p72(){ // PDPAR -> PDPAR $idq
+int tCG::p73(){ // PDPAR -> PDPAR $idq
     if (S1->count) {
         S1->obj += S1->count % 2 ? ", " : "\n\t , ";
     }
@@ -381,7 +384,7 @@ int tCG::p72(){ // PDPAR -> PDPAR $idq
 	return 0;
 }
 
-int tCG::p73(){ // PDPAR -> PDPAR $id
+int tCG::p74(){ // PDPAR -> PDPAR $id
     if (S1->count) {
         S1->obj += S1->count % 2 ? ", " : "\n\t , ";
     }
@@ -390,47 +393,47 @@ int tCG::p73(){ // PDPAR -> PDPAR $id
 	return 0;
 }
 
-int tCG::p74(){ // VAR -> VARDCL E )
+int tCG::p75(){ // VAR -> VARDCL E )
     declarations += "extern double " + S1->obj + "/*" + S1->line + "*/;\n\t ";
     S1->obj = "double " + S1->obj + "/*" + S1->line + "*/ = " + S2->obj + ";\n\t ";
 	return 0;
 }
 
-int tCG::p75(){ // VARDCL -> ( define $id
+int tCG::p76(){ // VARDCL -> ( define $id
     S1->obj = decor(S3->name);
 	return 0;
 }
 
-int tCG::p76(){ // PROC -> HPROC BLOCK )
+int tCG::p77(){ // PROC -> HPROC BLOCK )
     S1->obj += S2->obj + "}\n";
 	return 0;
 }
 
-int tCG::p77(){ // PROC -> HPROC E )
+int tCG::p78(){ // PROC -> HPROC E )
     S1->obj += "return\n " + S2->obj + ";\n\t }\n";
 	return 0;
 }
 
-int tCG::p78(){ // HPROC -> PCPAR )
+int tCG::p79(){ // HPROC -> PCPAR )
     S1->obj += ") ";
     declarations += S1->obj + ";\n\t ";
     S1->obj += "{\n ";
 	return 0;
 }
 
-int tCG::p79(){ // HPROC -> HPROC INTER
+int tCG::p80(){ // HPROC -> HPROC INTER
     S1->obj += S2->obj + ";\n\t ";
 	return 0;
 }
 
-int tCG::p80(){ // PCPAR -> ( define ( $id
+int tCG::p81(){ // PCPAR -> ( define ( $id
     S1->obj = "double " + decor(S4->name) + "/*" + S4->line + "*/ (";
     S1->count = 0;
     S1->name = S4->name;
 	return 0;
 }
 
-int tCG::p81(){ // PCPAR -> PCPAR $id
+int tCG::p82(){ // PCPAR -> PCPAR $id
     if (S1->count) {
         S1->obj += S1->count % 2 ? ", " : "\n\t , ";
     }
@@ -439,46 +442,70 @@ int tCG::p81(){ // PCPAR -> PCPAR $id
 	return 0;
 }
 
-int tCG::p82(){ // BLOCK -> HBLOCK E )
+int tCG::p83(){ // BLOCK -> HBLOCK E )
     S1->obj += "return " + S2->obj +";\n\t }\n";
 	return 0;
 }
 
-int tCG::p83(){ // HBLOCK -> BLVAR )
+int tCG::p84(){ // HBLOCK -> BLVAR )
     S1->obj += ";\n\t ";
 	return 0;
 }
 
-int tCG::p84(){ // HBLOCK -> HBLOCK INTER
+int tCG::p85(){ // HBLOCK -> HBLOCK INTER
     S1->obj += S2->obj + ";\n\t ";
 	return 0;
 }
 
-int tCG::p85(){ // BLVAR -> ( let ( LOCDEF
+int tCG::p86(){ // BLVAR -> ( let ( LOCDEF
     S1->obj += "{\n double " + S4->obj;
 	return 0;
 }
 
-int tCG::p86(){ // BLVAR -> BLVAR LOCDEF
+int tCG::p87(){ // BLVAR -> BLVAR LOCDEF
     S1->obj += ",\n\t " + S2->obj;
 	return 0;
 }
 
-int tCG::p87(){ // LOCDEF -> ( $id E )
+int tCG::p88(){ // LOCDEF -> ( $id E )
     S1->obj += decor(S2->name) + "( " + S3->obj + " )";
 	return 0;
 }
-
 //_____________________
-int tCG::p88(){return 0;} int tCG::p89(){return 0;}
-int tCG::p90(){return 0;} int tCG::p91(){return 0;}
-int tCG::p92(){return 0;} int tCG::p93(){return 0;}
-int tCG::p94(){return 0;} int tCG::p95(){return 0;}
-int tCG::p96(){return 0;} int tCG::p97(){return 0;}
-int tCG::p98(){return 0;} int tCG::p99(){return 0;}
-int tCG::p100(){return 0;} int tCG::p101(){return 0;}
-int tCG::p102(){return 0;} int tCG::p103(){return 0;}
-int tCG::p104(){return 0;} int tCG::p105(){return 0;}
-int tCG::p106(){return 0;} int tCG::p107(){return 0;}
-int tCG::p108(){return 0;} int tCG::p109(){return 0;}
+
+int tCG::p89(){return 0;}
+int tCG::p90(){return 0;}
+int tCG::p91(){return 0;}
+int tCG::p92(){return 0;}
+int tCG::p93(){return 0;}
+int tCG::p94(){return 0;}
+int tCG::p95(){return 0;}
+int tCG::p96(){return 0;}
+int tCG::p97(){return 0;}
+int tCG::p98(){return 0;}
+int tCG::p99(){return 0;}
+int tCG::p100(){return 0;}
+int tCG::p101(){return 0;}
+int tCG::p102(){return 0;}
+int tCG::p103(){return 0;}
+int tCG::p104(){return 0;}
+int tCG::p105(){return 0;}
+int tCG::p106(){return 0;}
+int tCG::p107(){return 0;}
+int tCG::p108(){return 0;}
+int tCG::p109(){return 0;}
 int tCG::p110(){return 0;}
+
+
+// E -> EASYLET
+//1 EASYLET -> HEASYL E )
+//2 HEASYL -> ( let ( )
+// HEASYL -> HEASYL INTER
+// BRANCHES -> CLAUS CLAUS
+// CLAUS -> ( BOOL E )
+// STR -> SCOND
+//3 SCOND -> ( cond SBRANCHES )
+// SBRANCHES -> SELSE
+//4 SBRANCHES -> SCLAUS SBRANCHES
+// SCLAUS -> ( BOOL STR )
+//5 SELSE -> ( else STR )
