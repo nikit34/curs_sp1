@@ -1,4 +1,3 @@
-/*  mlisp.h 2019  */
 #include<iostream>
 #include<cmath>
 #include<limits>

@@ -86,4 +86,3 @@ double dd/*39*/ = 4.;
 	 return
  0;
 	 }
-
