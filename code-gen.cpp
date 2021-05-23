@@ -195,7 +195,7 @@ int tCG::p34(){ // SELSE -> ( else STR )
 	return 0;
 }
 
-int tCG::p35(){ // BOOL -> $bool
+int tCG::p35() /* #t */ { // BOOL -> $bool
     S1->obj = (S1->name == "#t" ? "true" : "false");
 	return 0;
 }
